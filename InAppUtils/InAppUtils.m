@@ -96,19 +96,36 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_METHOD(purchaseProductForUser:(NSString *)productIdentifier
+                  offerIdentifier:(NSString *)offerIdentifier
+                  keyIdentifier:(NSString *)keyIdentifier
+                  nonce:(NSString *)nonce
+                  signature:(NSString *)offerSignature
+                  timestamp:(NSString *)timestamp
                   username:(NSString *)username
                   callback:(RCTResponseSenderBlock)callback)
 {
-    [self doPurchaseProduct:productIdentifier username:username callback:callback];
+    [self doPurchaseProduct:productIdentifier offerIdentifier:offerIdentifier keyIdentifier:keyIdentifier nonce:nonce signature:offerSignature timestamp:timestamp username:username callback:callback];
+}
+
+RCT_EXPORT_METHOD(purchaseProductForUser:(NSString *)productIdentifier
+                  username:(NSString *)username
+                  callback:(RCTResponseSenderBlock)callback)
+{
+    [self doPurchaseProduct:productIdentifier offerIdentifier:nil keyIdentifier:nil nonce:nil signature:nil timestamp:nil username:username callback:callback];
 }
 
 RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
                   callback:(RCTResponseSenderBlock)callback)
 {
-    [self doPurchaseProduct:productIdentifier username:nil callback:callback];
+    [self doPurchaseProduct:productIdentifier offerIdentifier:nil keyIdentifier:nil nonce:nil signature:nil timestamp:nil username:nil callback:callback];
 }
 
 - (void) doPurchaseProduct:(NSString *)productIdentifier
+           offerIdentifier:(NSString *)offerIdentifier
+             keyIdentifier:(NSString *)keyIdentifier
+                     nonce:(NSString *)nonce
+                 signature:(NSString *)offerSignature
+                 timestamp:(NSString *)timestamp
                   username:(NSString *)username
                   callback:(RCTResponseSenderBlock)callback
 {
@@ -125,6 +142,10 @@ RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
         SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:product];
         if(username) {
             payment.applicationUsername = username;
+        }
+        if(offerIdentifier && offerIdentifier && keyIdentifier && nonce && offerSignature && timestamp) {
+            SKProductDiscount *discount = [SKProductDiscount initWithIdentifier: offerIdentifier keyIdentifier: keyIdentifier nonce: nonce signature: offerSignature timestamp: timestamp];
+            payment.discount = discount;
         }
         [[SKPaymentQueue defaultQueue] addPayment:payment];
         _callbacks[RCTKeyForInstance(payment.productIdentifier)] = callback;
