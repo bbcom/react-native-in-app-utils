@@ -261,7 +261,6 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
 - (void)productsRequest:(SKProductsRequest *)request
      didReceiveResponse:(SKProductsResponse *)response
 {
-    NSLog(@"response: %@", response);
     NSString *key = RCTKeyForInstance(request);
     RCTResponseSenderBlock callback = _callbacks[key];
     if (callback) {
