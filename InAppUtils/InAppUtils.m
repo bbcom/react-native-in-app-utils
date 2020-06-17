@@ -98,7 +98,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(purchaseProductForUser:(NSString *)productIdentifier
                   offerIdentifier:(NSString *)offerIdentifier
                   keyIdentifier:(NSString *)keyIdentifier
-                  nonce:(NSString *)nonce
+                  nonce:(NSUUID *)nonce
                   signature:(NSString *)offerSignature
                   timestamp:(NSString *)timestamp
                   username:(NSString *)username
@@ -123,7 +123,7 @@ RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
 - (void) doPurchaseProduct:(NSString *)productIdentifier
            offerIdentifier:(NSString *)offerIdentifier
              keyIdentifier:(NSString *)keyIdentifier
-                     nonce:(NSString *)nonce
+                     nonce:(NSUUID *)nonce
                  signature:(NSString *)offerSignature
                  timestamp:(NSString *)timestamp
                   username:(NSString *)username
@@ -143,9 +143,11 @@ RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
         if(username) {
             payment.applicationUsername = username;
         }
-        if(offerIdentifier && offerIdentifier && keyIdentifier && nonce && offerSignature && timestamp) {
-            SKProductDiscount *discount = [SKProductDiscount initWithIdentifier: offerIdentifier keyIdentifier: keyIdentifier nonce: nonce signature: offerSignature timestamp: timestamp];
-            payment.discount = discount;
+        if (@available(iOS 12.2, *)) {
+            if(offerIdentifier && offerIdentifier && keyIdentifier && nonce && offerSignature && timestamp) {
+                SKPaymentDiscount *discount = [[SKPaymentDiscount alloc] initWithIdentifier: offerIdentifier keyIdentifier: keyIdentifier nonce: nonce signature: offerSignature timestamp: timestamp];
+                payment.paymentDiscount = discount;
+            }
         }
         [[SKPaymentQueue defaultQueue] addPayment:payment];
         _callbacks[RCTKeyForInstance(payment.productIdentifier)] = callback;
@@ -259,6 +261,7 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
 - (void)productsRequest:(SKProductsRequest *)request
      didReceiveResponse:(SKProductsResponse *)response
 {
+    NSLog(@"response: %@", response);
     NSString *key = RCTKeyForInstance(request);
     RCTResponseSenderBlock callback = _callbacks[key];
     if (callback) {
