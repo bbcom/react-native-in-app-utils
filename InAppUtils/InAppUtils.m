@@ -95,27 +95,17 @@ RCT_EXPORT_MODULE()
     }
 }
 
-RCT_EXPORT_METHOD(purchaseProductForUser:(NSString *)productIdentifier
-                  offerIdentifier:(NSString *)offerIdentifier
-                  keyIdentifier:(NSString *)keyIdentifier
-                  nonce:(NSUUID *)nonce
-                  signature:(NSString *)offerSignature
-                  timestamp:(NSString *)timestamp
-                  username:(NSString *)username
-                  callback:(RCTResponseSenderBlock)callback)
-{
-    [self doPurchaseProduct:productIdentifier offerIdentifier:offerIdentifier keyIdentifier:keyIdentifier nonce:nonce signature:offerSignature timestamp:timestamp username:username callback:callback];
-}
 
-RCT_EXPORT_METHOD(purchaseProductForUser:(NSString *)productIdentifier
+RCT_EXPORT_METHOD(purchaseProductWithOffer:(NSString *)productIdentifier
                   offerIdentifier:(NSString *)offerIdentifier
                   keyIdentifier:(NSString *)keyIdentifier
-                  nonce:(NSUUID *)nonce
+                  nonce:(NSString *)nonce
                   signature:(NSString *)offerSignature
-                  timestamp:(NSString *)timestamp
+                  timestamp:(nonnull NSNumber *)timestamp
                   callback:(RCTResponseSenderBlock)callback)
 {
-    [self doPurchaseProduct:productIdentifier offerIdentifier:offerIdentifier keyIdentifier:keyIdentifier nonce:nonce signature:offerSignature timestamp:timestamp username:nil callback:callback];
+    NSUUID *nonceUUID = [[NSUUID alloc] initWithUUIDString:nonce];
+    [self doPurchaseProduct:productIdentifier offerIdentifier:offerIdentifier keyIdentifier:keyIdentifier nonce:nonceUUID signature:offerSignature timestamp:timestamp username:nil callback:callback];
 }
 
 RCT_EXPORT_METHOD(purchaseProductForUser:(NSString *)productIdentifier
@@ -136,7 +126,7 @@ RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
              keyIdentifier:(NSString *)keyIdentifier
                      nonce:(NSUUID *)nonce
                  signature:(NSString *)offerSignature
-                 timestamp:(NSString *)timestamp
+                 timestamp:(nonnull NSNumber *)timestamp
                   username:(NSString *)username
                   callback:(RCTResponseSenderBlock)callback
 {
