@@ -126,7 +126,7 @@ RCT_EXPORT_METHOD(purchaseProduct:(NSString *)productIdentifier
              keyIdentifier:(NSString *)keyIdentifier
                      nonce:(NSUUID *)nonce
                  signature:(NSString *)offerSignature
-                 timestamp:(nonnull NSNumber *)timestamp
+                 timestamp:(NSNumber *)timestamp
                   username:(NSString *)username
                   callback:(RCTResponseSenderBlock)callback
 {
