@@ -51,8 +51,11 @@ export type ProductData = {
   description: string,
   title: string,
   discounts: Array<Discount>,
-  introductoryPrice:  introductoryPrice,
-  subscriptionPeriod: subscriptionPeriod,
+  introductoryPrice:  IntroductoryPrice,
+  subscriptionPeriod: {
+    unit: SubscriptionPeriod,
+    numberOfUnits: string
+  },
 };
 
 export class IOSIAPError extends Error {
