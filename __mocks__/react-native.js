@@ -53,7 +53,7 @@ module.exports = {
                 callback(null, [{
                     transactionDate: 100000000,
                     transactionIdentifier: 'sdlfkjsflskdjf',
-                    productIdentifier: productSku,
+                    productIdentifier: "a-sku",
                     transactionReceipt: 'sfsdfsdfsdfsf'
                 }]);
             },

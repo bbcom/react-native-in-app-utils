@@ -36,8 +36,8 @@ export type IntroductoryPrice = {
   numberOfPeriods: string,
   subscriptionPeriod: {
     unit: SubscriptionPeriod,
-    numberOfUnits: string
-  }
+    numberOfUnits: string,
+  },
 };
 
 export type ProductData = {
@@ -51,20 +51,31 @@ export type ProductData = {
   description: string,
   title: string,
   discounts: Array<Discount>,
-  introductoryPrice:  IntroductoryPrice,
+  introductoryPrice: IntroductoryPrice,
   subscriptionPeriod: {
     unit: SubscriptionPeriod,
-    numberOfUnits: string
+    numberOfUnits: string,
   },
 };
 
 export class IOSIAPError extends Error {
-  constructor(code) {
+  constructor(origin, code, message) {
     super();
+    this.origin = origin;
     this.code = code;
-    this.message = code;
+    this.message = message ? message : code;
   }
 }
+
+const PURCHASE_WITH_OFFER = "purchaseProductWithOffer";
+const PURCHASE_PRODUCT = "purchaseProduct";
+const RESTORE_PURCHASES = "restorePurchases";
+
+export const ERROR_ORIGINS = {
+  PURCHASE_WITH_OFFER,
+  PURCHASE_PRODUCT,
+  RESTORE_PURCHASES,
+};
 
 export const loadProducts = productSkus =>
   new Promise((resolve, reject) => {
@@ -94,9 +105,9 @@ export const purchaseProductWithOffer = (
         if (error) {
           reject(error);
         } else if (!response) {
-          reject(new IOSIAPError(NO_RESPONSE));
+          reject(new IOSIAPError(PURCHASE_WITH_OFFER, NO_RESPONSE));
         } else if (!response.productIdentifier) {
-          reject(new IOSIAPError(NO_PRODUCT_ID));
+          reject(new IOSIAPError(PURCHASE_WITH_OFFER, NO_PRODUCT_ID));
         } else {
           resolve(response);
         }
@@ -110,9 +121,9 @@ export const purchaseProduct = productSku => {
       if (error) {
         reject(error);
       } else if (!response) {
-        reject(new IOSIAPError(NO_RESPONSE));
+        reject(new IOSIAPError(PURCHASE_PRODUCT, NO_RESPONSE));
       } else if (!response.productIdentifier) {
-        reject(new IOSIAPError(NO_PRODUCT_ID));
+        reject(new IOSIAPError(PURCHASE_PRODUCT, NO_PRODUCT_ID));
       } else {
         resolve(response);
       }
@@ -126,7 +137,7 @@ export const restorePurchases = () => {
       if (error) {
         reject(error);
       } else if (!response) {
-        reject(new IOSIAPError(NO_RESPONSE));
+        reject(new IOSIAPError(RESTORE_PURCHASES, NO_RESPONSE));
       } else {
         resolve(response);
       }

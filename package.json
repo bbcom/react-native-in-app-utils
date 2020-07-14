@@ -8,7 +8,8 @@
     "url": "http://chiragjain.tumblr.com"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint *.js"
   },
   "peerDependencies": {
     "react-native": "^0.61.5"
@@ -30,6 +31,11 @@
   ],
   "devDependencies": {
     "@babel/preset-flow": "^7.10.4",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.4.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.1.0",
     "metro-react-native-babel-preset": "^0.60.0"
   }

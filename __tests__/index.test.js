@@ -6,6 +6,7 @@ const {
   loadProducts,
   purchaseProductWithOffer,
   purchaseProduct,
+  restorePurchases,
 } = require("..");
 
 describe("test loadProducts", () => {
@@ -48,15 +49,19 @@ describe("test purchaseProductWithOffer", () => {
     ).rejects.toThrow("oh no");
   });
 
-  it("rejects if there is no response from app store", () => {
-    return expect(
-      purchaseProductWithOffer("no_res_sku", "nice_offer_bro", {
-        keyIdentifier: "key_identifier",
-        nonce: "nonce",
-        signature: "signature",
-        timestamp: 100000001,
-      })
-    ).rejects.toThrow("no_response");
+  it("rejects if there is no response from app store", async () => {
+    try {
+        await purchaseProductWithOffer("no_res_sku", "nice_offer_bro", {
+            keyIdentifier: "key_identifier",
+            nonce: "nonce",
+            signature: "signature",
+            timestamp: 100000001,
+          });
+    } catch (error) {
+        expect(error.origin).toBe("purchaseProductWithOffer");
+        expect(error.code).toBe("no_response");
+        expect(error.message).toBe("no_response");
+    }
   });
 });
 
@@ -74,17 +79,23 @@ describe("test purchaseProduct", () => {
     return expect(purchaseProduct("fail_sku")).rejects.toThrow("oh no");
   });
 
-  it("rejects if there is no response from app store", () => {
-    return expect(purchaseProduct("no_res_sku")).rejects.toThrow("no_response");
+  it("rejects if there is no response from app store", async () => {
+    try {
+        await purchaseProduct("no_res_sku");
+    } catch(error) {
+        expect(error.origin).toBe("purchaseProduct");
+        expect(error.code).toBe("no_response");
+        expect(error.message).toBe("no_response");
+    }
   });
 });
 
 describe("test restorePurchases", () => {
     it('resolves with list', () => {
-        return expect(restorePurchases()).resolves.toStrictEqual({
+        return expect(restorePurchases()).resolves.toStrictEqual([{
             transactionDate: 100000000,
             transactionIdentifier: 'sdlfkjsflskdjf',
-            productIdentifier: productSku,
+            productIdentifier: "a-sku",
             transactionReceipt: 'sfsdfsdfsdfsf'
         }]);
     });
