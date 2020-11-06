@@ -274,6 +274,8 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
             
             if (@available(iOS 12.2, *)) {
                 discounts = [self getDiscountData:[item.discounts copy]];
+            } else {
+                discounts = @[];
             }
             
             NSString* currencyCode = [item.priceLocale objectForKey:NSLocaleCurrencyCode];
@@ -395,7 +397,7 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
                 @"downloadable": item.isDownloadable ? @"true" : @"false" ,
                 @"description": item.localizedDescription ? item.localizedDescription : @"",
                 @"title": item.localizedTitle ? item.localizedTitle : @"",
-                @"discounts": discounts ? discounts: @"",
+                @"discounts": discounts,
                 @"introductoryPrice":  introductoryPrice,
                 @"subscriptionPeriod": subscriptionPeriod,
             };
