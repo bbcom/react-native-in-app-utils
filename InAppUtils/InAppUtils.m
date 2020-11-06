@@ -327,7 +327,7 @@ RCT_EXPORT_METHOD(receiptData:(RCTResponseSenderBlock)callback)
                             introductoryPricePaymentMode = @"PAYUPFRONT";
                             break;
                         default:
-                            introductoryPricePaymentMode = @"";                            
+                            introductoryPricePaymentMode = @"";
                             break;
                     }
                     
