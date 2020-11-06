@@ -7,10 +7,6 @@
     "email": "jain_chirag04@yahoo.com",
     "url": "http://chiragjain.tumblr.com"
   },
-  "peerDependencies": {
-    "react-native": "^0.61.5"
-  },
-  "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
